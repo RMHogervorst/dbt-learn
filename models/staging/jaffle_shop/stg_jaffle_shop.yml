@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: Staging for customer data. 
+    columns:
+      - name: customer_id
+        description: primary key
+        tests:
+          - unique
+          - not_null
+  - name: stg_orders
+    description: Staged order data from our jaffle shop.
+    columns:
+      - name: status
+        description: "{{ doc('order_status') }}"
+        tests:
+          - accepted_values:
+              values:
+                - completed
+                - shipped
+                - returned
+                - placed
+                - return_pending
+      - name: customer_id
+        description: Primary key for orders.
+        tests:
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
